@@ -94,34 +94,62 @@ class Request:
 def main():
     while (True):
         # user_input = input("Введите запрос :")
-        user_input = "Доставить 31 презики из склад в магазин"
+        user_input = "Доставить 3 печеньки из склад в магазин"
+
         if user_input == 'stop':
             break
-        store = Store()
-        shop = Shope()
+
         request = Request(user_input)
 
-        store_items = {
-                        'чипсы' : 20,
-                       "презики" : 20 ,
-                       'печеньки' : 30
-                         }
         store.items = store_items
         from_ = store if request.from_ == 'склад' else shop
-        to_ = store if request == 'склад' else shop
-        print(request.product)
-        print(from_.items)
+        to_ = store if request.to_ == 'склад' else shop
+
         if request.product in from_.items:
             print(f"нужный товар есть в пункте \'{request.from_}\'")
         else:
-            print('пошел на')
+            print(f'в пункте {request.from_} нет такого товара ')
+            continue
 
         if from_.items[request.product] >= request.amount:
-            print('все ок')
+            print(f"нужное колличество есть в пункте'{request.from_}\'")
         else:
-            print(f'пошел на, в пункте \"{request.from_}\" не хватает {request.amount - from_.items[request.product]}')
+            print(f'В пункте \"{request.from_}\" не хватает {request.amount - from_.items[request.product]}')
+            continue
+        if to_.get_free_space >= request.amount:
+            print(f"В пункте \'{request.to_}\' достаточно места ")
+        else:
+            print(f"В пункте {request.to_} не хватает {request.amount - to_.get_free_space} ")
+            continue
+        if request.to_ == 'магазин' and to_.get_unique_items_count == 5 and request.product not in to_.items:
+            print("В магазине достаточно уникальных значений")
+            continue
+        from_.remove(request.product, request.amount)
+        print(f"Курьер забрал {request.amount} {request.product} из пункта {request.from_}")
+        print(f"Курьер везет {request.amount} {request.product} из пункта {request.from_} в пункт {request.to_}")
+        to_.add(request.product, request.amount)
+        print(f"Курьер доставил {request.amount} {request.product} в пункт {request.to_}")
+        print('='*30)
+        print('На складе :')
+        for title, count in store.items.items():
+            print(f"{title} : {count}")
+        print(f'Свободного места {store.get_free_space}')
+        print('=' * 30)
+        print('В магазине :')
+        for title, count in shop.items.items():
+            print(f"{title} : {count}")
+        print(f'Свободного места {shop.get_free_space}')
+        print('=' * 30)
         break
 
 
 if __name__ == "__main__":
+    store = Store()
+    shop = Shope()
+
+    store_items = {
+        'чипсы': 20,
+        "сок": 20,
+        'печеньки': 38
+    }
     main()
