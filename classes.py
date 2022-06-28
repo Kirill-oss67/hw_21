@@ -93,15 +93,13 @@ class Request:
 
 def main():
     while (True):
-        # user_input = input("Введите запрос :")
-        user_input = "Доставить 3 печеньки из склад в магазин"
+        user_input = input("Введите запрос :")
 
         if user_input == 'stop':
             break
 
         request = Request(user_input)
 
-        store.items = store_items
         from_ = store if request.from_ == 'склад' else shop
         to_ = store if request.to_ == 'склад' else shop
 
@@ -119,7 +117,7 @@ def main():
         if to_.get_free_space >= request.amount:
             print(f"В пункте \'{request.to_}\' достаточно места ")
         else:
-            print(f"В пункте {request.to_} не хватает {request.amount - to_.get_free_space} ")
+            print(f"В пункте {request.to_} не хватает {request.amount - to_.get_free_space} места ")
             continue
         if request.to_ == 'магазин' and to_.get_unique_items_count == 5 and request.product not in to_.items:
             print("В магазине достаточно уникальных значений")
@@ -140,7 +138,6 @@ def main():
             print(f"{title} : {count}")
         print(f'Свободного места {shop.get_free_space}')
         print('=' * 30)
-        break
 
 
 if __name__ == "__main__":
@@ -152,4 +149,7 @@ if __name__ == "__main__":
         "сок": 20,
         'печеньки': 38
     }
+    store.items = store_items
     main()
+
+#Доставить 3 печеньки из склад в магазин
